@@ -1,0 +1,107 @@
+server:
+  port: ${spring.boot.server.port:8820}
+
+spring: 
+  application:
+    name: cms-server
+
+  security: 
+    tokenservice:
+      endpoint: ${tokenservice.uri:http://localhost:8801/oauth/check_token}
+      clientid: ${tokenservice.clientid:cmsClient}
+      clientsecret: ${tokenservice.clientsecret:7ac9d076}
+
+  datasource:
+    url: jdbc:postgresql://${db.host:localhost}:${db.port:5432}/${db.name:cms}?useSSL=false
+    username: ${db.uid:cms}
+    password: ${db.pwd:cms}
+    testOnBorrow: true
+    validationQuery: SELECT 1
+    driver-class-name: org.postgresql.Driver
+    initialization-mode: always
+    platform: postgres
+
+    tomcat:
+      test-while-idle: true
+      validation-query: SELECT 1
+
+  jpa:
+    database: POSTGRESQL
+    show-sql: false
+    hibernate:
+      naming:
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+      ddl-auto: validate
+    properties:
+      hibernate: 
+        jdbc.lob.non_contextual_creation: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        show_sql: false
+        format_sql: false
+        search: 
+          default: 
+            directory_provider: filesystem
+            indexBase: /data/luceneindex
+
+  servlet:
+    multipart: 
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+  mail: 
+    host: ${mail.host:localhost}
+    port: ${mail.port:25}
+    username: ${mail.username:}
+    password: ${mail.password:}
+    properties:
+      mail: 
+        smtp:
+          auth: ${mail.smtp.auth:false}
+          starttls:
+            enable: ${mail.smtp.starttls.enable:false}
+            required: ${mail.smtp.starttls.required:false}
+
+management.endpoints.web.exposure.include: health, info
+
+eureka: 
+  instance: 
+    preferIpAddress: true
+    hostname: ${server.name:}
+  client: 
+    enabled: ${eureka.enabled:false}
+    serviceUrl: 
+      defaultZone: ${eureka.uri:http://localhost:8800/eureka}
+
+liquibase.enabled: true
+
+file: 
+  upload: 
+    dir: /data/objectfiles
+
+logging:
+  path: logs/cms
+
+---
+
+server:
+  port: 8821
+
+spring: 
+  profiles: cms2
+
+---
+
+server:
+  port: 8822
+
+spring: 
+  profiles: cms3
+
+---
+
+server:
+  port: 8823
+
+spring: 
+  profiles: cms4

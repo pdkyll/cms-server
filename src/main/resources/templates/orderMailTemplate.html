@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<style>
+	.mat-card{
+		box-shadow: 0 2px 1px -1px rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 1px 3px 0 rgba(0,0,0,.12);transition: box-shadow 280ms cubic-bezier(.4,0,.2,1); display: block; position: relative; padding: 16px; border-radius: 4px; background: #fff; color: rgba(0,0,0,.87); font-family: Roboto,'Helvetica Neue',sans-serif; font-size: 1rem; font-weight: 400; line-height: 1.5; text-align: left;
+	}
+	.shoppingcart-column{
+		margin: 0; display: flex; flex-direction: column; color: rgba(0,0,0,.87);
+	}
+	@media (min-width: 0px) and (max-width: 576px) {
+		.shoppingcart-row-header{
+			display: none;
+		}
+		.shoppingcart-row{
+			border-top: solid 1px #E1E1E1; padding-top: 7.5px; padding-bottom: 7.5px; align-items: center; 
+		}
+		.shoppingcart-row .shoppingcart-conditional-column{
+			display: block;
+		}
+		.col-md-5{
+			flex: 0 0 100%; max-width: 100%;
+		}
+		.col-md-2{
+			flex: 0 0 100%; max-width: 100%;
+		}
+	}
+	@media (min-width: 576px) {
+		.shoppingcart-row-header{
+			padding-bottom: 7.5px; align-items: center; display: flex; flex-direction: row;
+		}
+		.shoppingcart-row{
+			border-top: solid 1px #E1E1E1; padding-top: 7.5px; padding-bottom: 7.5px; align-items: center; 
+			display: flex; 
+			flex-direction: row;
+		}
+		.shoppingcart-row .shoppingcart-conditional-column{
+			display: none;
+		}
+		.col-md-5{
+			flex: 0 0 50%; max-width: 50%;
+		}
+		.col-md-2{
+			flex: 0 0 16.6666666667%; max-width: 16.6666666667%;
+		}
+	}
+	.shoppingcart-row a{
+		text-decoration: none; background-color: transparent; color: black;
+	}
+	.shoppingcart-row a:hover{
+		text-decoration: none; color: grey;
+	}
+	.thumbnail-name-wrapper{
+		display: flex; flex-direction: row; align-items: center;
+	}
+	.thumbnail-name-wrapper img{
+		width: 150px; height: 150px;
+	}
+	.thumbnail-name-wrapper span{
+		margin-left: 10px;
+	}
+	.col-md-12{
+		flex: 0 0 100%; max-width: 100%;
+	}
+	pre {
+	    white-space: pre-wrap;       /* css-3 */
+	    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+	    white-space: -pre-wrap;      /* Opera 4-6 */
+	    white-space: -o-pre-wrap;    /* Opera 7 */
+	    word-wrap: break-word;       /* Internet Explorer 5.5+ */
+	}
+	pre span{
+	    font-family: Roboto,"Helvetica Neue",sans-serif;
+	}
+</style>
+<body>
+	<section>
+		<div class="mat-card">
+	        <div class="col-md-12">
+	        	<span th:utext="${'<b>Bestelling nummer: </b>' + order.orderReference}"></span>
+			</div>
+		</div>
+		<div class="mat-card">
+	        <div class="col-md-12">
+	        	<span th:utext="${'<b>Bestelling aangevraagd door: </b>' + order.name}"></span>
+			</div>
+	        <div class="col-md-12">
+	        	<span th:utext="${'<b>Email adres aanvrager: </b><a href=&quot;mailto:' + order.email + '&quot;>' + order.email + '</a>'}"></span>
+			</div>
+		</div>
+		<div class="mat-card" th:if= "${order.note != null && order.note != ''}">
+	        <div class="col-md-12">
+	        	<span><b>Opmerkingen van aanvrager: </b></span>
+			</div>
+	        <div class="col-md-12">
+	        	<pre><span th:utext="${order.note}"></span></pre>
+			</div>
+		</div>
+	</section>
+    <section>
+	    <div class="mat-card">
+	        <div class="shoppingcart-column">
+	            <div class="shoppingcart-row">
+	                <div class="col-md-12">
+	                	<span><b>Bestelling:</b></span>
+	                </div>
+	            </div>
+            </div>
+	        <div class="shoppingcart-column">
+	            <div class="shoppingcart-row shoppingcart-row-header">
+	                <div class="col-md-5">
+	                    <span><b>Artikel</b></span>
+	                </div>
+	                <div class="col-md-2">
+	                    <span><b>Prijs per stuk</b></span>
+	                </div>
+	                <div class="col-md-2">
+	                    <span><b>Aantal</b></span>
+	                </div>
+	                <div class="col-md-2">
+	                    <span><b>Bedrag</b></span>
+	                </div>
+	            </div>
+	            <div class="shoppingcart-row" th:each="orderItem : ${orderItems}">
+	                <div class="col-md-5">
+	                    <div class="shoppingcart-conditional-column">
+	                        <span><b>Artikel</b></span>
+	                    </div>
+	                    <a th:href="${orderItem.url}">
+	                        <div class="thumbnail-name-wrapper">
+	                            <img th:src="${orderItem.thumbnailUrl}">
+	                            <span th:text="${orderItem.name}"></span>
+	                        </div>
+	                    </a>
+	                </div>
+	                <div class="col-md-2">
+	                    <div class="shoppingcart-conditional-column">
+	                        <span><b>Prijs per stuk</b></span>
+	                    </div>
+	                    <span th:text="${'&euro;&nbsp;' + orderItem.price}"></span>
+	                </div>
+	                <div class="col-md-2">
+	                    <div class="shoppingcart-conditional-column">
+	                        <span><b>Aantal</b></span>
+	                    </div>
+	                    <span th:text="${orderItem.quantity}"></span>
+	                </div>
+	                <div class="col-md-2">
+	                    <div class="shoppingcart-conditional-column">
+	                        <span><b>Bedrag</b></span>
+	                    </div>
+	                    <span th:text="${'&euro;&nbsp;' + #numbers.formatDecimal(@emailTemplateUtil.calculateTotalPriceItem(orderItem), 0, 2, 'COMMA')}"></span>
+	                </div>
+	            </div>
+	            <div class="shoppingcart-row" style="text-align: center;">
+	                <div class="col-md-12">
+	                    <span><b th:text="${'Excl. verzendkosten. Totaalbedrag: &euro;&nbsp;' + #numbers.formatDecimal(@emailTemplateUtil.calculateTotalPriceItems(orderItems), 0, 2, 'COMMA')}"></b></span>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	</section>
+</body>
+</html>

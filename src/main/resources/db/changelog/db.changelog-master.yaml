@@ -1,0 +1,149 @@
+########################################################################################
+#                                 Liquibase configuration 
+#
+# remember:
+# - no tabs; only spaces!
+# - changeSets that have been released CAN NOT be changed/altered.
+# - add new changeSets at the bottom of the file.
+########################################################################################
+databaseChangeLog:
+  - changeSet:
+      id : 20190827-1
+      author: menno
+      changes:
+      - createSequence:
+          sequenceName: hibernate_sequence
+          startValue: 1
+          cacheSize: 1
+      - createSequence:
+          sequenceName: cms_object_id_seq
+          startValue: 1
+          cacheSize: 1
+      - createSequence:
+          sequenceName: order_id_seq
+          startValue: 1
+          cacheSize: 1
+      - createTable:
+          tableName: cms_object
+          columns:
+          - column:
+              name: id
+              type: bigint
+              constraints:
+                  nullable: false
+                  primaryKey: true
+                  primaryKeyName: "id_cms_object_pkey"
+              defaultValue: nextval('cms_object_id_seq')
+          - column:
+              name: creation_time
+              type: "timestamp with time zone"
+              defaultValueComputed: clock_timestamp()
+              constraints:
+                  nullable: false
+          - column:
+              name: modification_time
+              type: "timestamp with time zone"
+              defaultValueComputed: clock_timestamp()
+              constraints:
+                  nullable: false
+          - column:
+              name: name
+              type: text
+              constraints:
+                  nullable: false
+          - column:
+              name: name_path
+              type: text
+              constraints:
+                  nullable: false
+          - column:
+              name: view
+              type: text
+              constraints:
+                  nullable: false
+          - column:
+              name: published
+              type: boolean
+              constraints:
+                  nullable: false
+          - column:
+              name: parent_id
+              type: bigint
+              constraints:
+                  nullable: true
+          - column:
+              name: child_index
+              type: bigint
+              defaultValue: 0
+              constraints:
+                  nullable: true
+          - column:
+              name: json
+              type: jsonb
+              constraints:
+                  nullable: true
+          - column:
+              name: search_string
+              type: text
+              constraints:
+                  nullable: true
+      - createTable:
+          tableName: order
+          columns:
+          - column:
+              name: id
+              type: bigint
+              constraints:
+                  nullable: false
+                  primaryKey: true
+                  primaryKeyName: "id_order_pkey"
+              defaultValue: nextval('order_id_seq')
+          - column:
+              name: creation_time
+              type: "timestamp with time zone"
+              defaultValueComputed: clock_timestamp()
+              constraints:
+                  nullable: false
+          - column:
+              name: modification_time
+              type: "timestamp with time zone"
+              defaultValueComputed: clock_timestamp()
+              constraints:
+                  nullable: false
+          - column:
+              name: order_reference
+              type: text
+              constraints:
+                  nullable: false
+          - column:
+              name: name
+              type: text
+              constraints:
+                  nullable: false
+          - column:
+              name: email
+              type: text
+              constraints:
+                  nullable: false
+          - column:
+              name: note
+              type: text
+              constraints:
+                  nullable: true
+          - column:
+              name: email_sent
+              type: boolean
+              constraints:
+                  nullable: false
+              defaultValueBoolean: false
+          - column:
+              name: order_items
+              type: jsonb
+              constraints:
+                  nullable: false
+      - addForeignKeyConstraint: 
+          baseColumnNames: parent_id
+          baseTableName: cms_object
+          constraintName: fk_parent_cms_object
+          referencedColumnNames: id
+          referencedTableName: cms_object
