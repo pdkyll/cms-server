@@ -27,6 +27,9 @@ public class CmsObjectService {
 	@Autowired
 	private CmsObjectSearchRepository cmsObjectSearchRepository;
 	
+	@Autowired
+	private FooterLinkObjectService footerLinkObjectService;
+	
 	public CmsObject getCmsObjectByPath(String path, boolean isAdmin) throws NotFoundException {
 		CmsObject cmsObject;
 		if(isAdmin) {
@@ -117,6 +120,7 @@ public class CmsObjectService {
 			throw new NotFoundException();
 		}
 		cmsObjectRepository.delete(cmsObject);
+		footerLinkObjectService.deleteFooterLinkObjectByCmsObjectId(id);
 	}
 	
 	public CmsObject createCmsObject(CmsObject cmsObject) throws IllegalArgumentException {
@@ -136,6 +140,7 @@ public class CmsObjectService {
 	@Transactional
 	public void deleteCmsObjectByPath(String path) {
 		cmsObjectRepository.deleteByPath(path);
+		footerLinkObjectService.deleteUnreferencedFooterLinkObjects();
 	}
 	
 	public List<CmsObject> searchCmsObjects(boolean isAdmin, String searchString){

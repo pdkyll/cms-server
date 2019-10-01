@@ -147,3 +147,53 @@ databaseChangeLog:
           constraintName: fk_parent_cms_object
           referencedColumnNames: id
           referencedTableName: cms_object
+  - changeSet:
+      id : 20191001-1
+      author: menno
+      changes:
+      - createSequence:
+          sequenceName: footer_link_object_id_seq
+          startValue: 1
+          cacheSize: 1
+      - addColumn:
+          columns:
+          - column:
+              name: only_menu
+              type: boolean
+              value: false
+              defaultValueBoolean: false
+          schemaName: public
+          tableName: cms_object
+      - createTable:
+          tableName: footer_link_object
+          columns:
+          - column:
+              name: id
+              type: bigint
+              constraints:
+                  nullable: false
+                  primaryKey: true
+                  primaryKeyName: "id_footer_link_object_pkey"
+              defaultValue: nextval('footer_link_object_id_seq')
+          - column:
+              name: creation_time
+              type: "timestamp with time zone"
+              defaultValueComputed: clock_timestamp()
+              constraints:
+                  nullable: false
+          - column:
+              name: modification_time
+              type: "timestamp with time zone"
+              defaultValueComputed: clock_timestamp()
+              constraints:
+                  nullable: false
+          - column:
+              name: cms_object_id
+              type: bigint
+              constraints:
+                  nullable: false
+          - column:
+              name: name
+              type: text
+              constraints:
+                  nullable: false
