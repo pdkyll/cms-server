@@ -26,6 +26,7 @@ import nl.menninga.menno.cms.entity.CmsObject;
 import nl.menninga.menno.cms.entity.projection.CmsObjectMinProjection;
 import nl.menninga.menno.cms.entity.projection.CmsObjectWithParentIdProjection;
 import nl.menninga.menno.cms.service.CmsObjectService;
+import nl.menninga.menno.cms.util.CmsObjectUtil;
 import nl.menninga.menno.cms.util.SecurityUtil;
 
 @RestController
@@ -52,6 +53,7 @@ public class CmsObjectController {
 			return ResponseEntity.notFound().build();
 		}
 		Map<String, Object> result = new HashMap<>();
+		result.put("rootObject", CmsObjectUtil.getRootCmsObject(cmsObject));
 		result.put("currentObject", cmsObject);
 		result.put("parent", cmsObject != null ? cmsObject.getParent() : null);
 		return ResponseEntity.ok(result);
