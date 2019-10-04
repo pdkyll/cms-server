@@ -1,5 +1,9 @@
 server:
   port: ${spring.boot.server.port:8820}
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+    min-response-size: 256
 
 spring: 
   application:
