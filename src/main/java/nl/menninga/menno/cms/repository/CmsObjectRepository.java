@@ -68,7 +68,7 @@ public interface CmsObjectRepository extends JpaRepository<CmsObject, Long> {
 			"    FROM cms_object" + 
 			"    WHERE parent_id is null" + 
 			"    UNION ALL" + 
-			"    SELECT c.id, c.creation_time, c.modification_time, c.name, c.name_path, c.view. c.only_menu, c.published, c.child_index, c.parent_id, c.json, c.search_string, (t0.level + 1), ARRAY_APPEND(t0.path_array, c.name_path)" + 
+			"    SELECT c.id, c.creation_time, c.modification_time, c.name, c.name_path, c.view, c.only_menu, c.published, c.child_index, c.parent_id, c.json, c.search_string, (t0.level + 1), ARRAY_APPEND(t0.path_array, c.name_path)" + 
 			"    FROM cms_object c" + 
 			"            INNER JOIN cms_object_temp t0 ON t0.id = c.parent_id" + 
 			") " +
