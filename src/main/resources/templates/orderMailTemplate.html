@@ -57,8 +57,12 @@
 	.thumbnail-name-wrapper img{
 		width: 150px; height: 150px;
 	}
-	.thumbnail-name-wrapper span{
-		margin-left: 10px;
+	.thumbnail-name-wrapper .name-color-wrapper{
+	    margin-left: 10px;
+	}	
+	.name-color-wrapper{
+	    display: flex;
+	    flex-direction: column;
 	}
 	.col-md-12{
 		flex: 0 0 100%; max-width: 100%;
@@ -130,7 +134,10 @@
 	                    <a th:href="${orderItem.url}">
 	                        <div class="thumbnail-name-wrapper">
 	                            <img th:src="${orderItem.thumbnailUrl}">
-	                            <span th:text="${orderItem.name}"></span>
+	                            <div class="name-color-wrapper">
+		                            <span th:text="${orderItem.name}"></span>
+		                            <span th:text="${orderItem.color}"></span>
+	                            </div>
 	                        </div>
 	                    </a>
 	                </div>
