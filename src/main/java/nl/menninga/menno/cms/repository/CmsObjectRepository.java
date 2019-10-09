@@ -70,9 +70,9 @@ public interface CmsObjectRepository extends JpaRepository<CmsObject, Long> {
 			"    FROM cms_object c" + 
 			"            INNER JOIN cms_object_temp t0 ON t0.id = c.parent_id" + 
 			") " +
-			"SELECT id, creation_time, modification_time, name, name_path, view, only_menu, published, child_index, parent_id, json, search_string " +
+			"SELECT id, creation_time, modification_time, name, name_path, view, only_menu, published, child_index, parent_id, json, search_string " + 
 			"FROM cms_object_temp " + 
 			"WHERE ARRAY_TO_STRING(path_array, '/') LIKE :path%"
 	)
-	<T> List<T> getRecursiveCmsObjectsByPath(String path);
+	List<CmsObject> getRecursiveCmsObjectsByPath(String path);
 }
