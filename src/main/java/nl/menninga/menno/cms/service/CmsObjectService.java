@@ -16,6 +16,7 @@ import nl.menninga.menno.cms.entity.projection.CmsObjectMinProjection;
 import nl.menninga.menno.cms.entity.projection.CmsObjectWithParentIdProjection;
 import nl.menninga.menno.cms.repository.CmsObjectRepository;
 import nl.menninga.menno.cms.repository.CmsObjectSearchRepository;
+import nl.menninga.menno.cms.service.storage.StorageService;
 import nl.menninga.menno.cms.util.StringUrlUtils;
 
 @Service
@@ -29,6 +30,9 @@ public class CmsObjectService {
 	
 	@Autowired
 	private FooterLinkObjectService footerLinkObjectService;
+	
+	@Autowired
+	private StorageService storageService;
 	
 	public CmsObject getCmsObjectByPath(String path, boolean isAdmin) throws NotFoundException {
 		CmsObject cmsObject;
@@ -119,6 +123,7 @@ public class CmsObjectService {
 		if(Objects.isNull(cmsObject)) {
 			throw new NotFoundException();
 		}
+		storageService.deleteAllObjectFiles(cmsObject.getId());
 		cmsObjectRepository.delete(cmsObject);
 		footerLinkObjectService.deleteFooterLinkObjectByCmsObjectId(id);
 	}
@@ -138,9 +143,13 @@ public class CmsObjectService {
 	}
 	
 	@Transactional
-	public void deleteCmsObjectByPath(String path) {
-		cmsObjectRepository.deleteByPath(path);
-		footerLinkObjectService.deleteUnreferencedFooterLinkObjects();
+	public void deleteRecursiveCmsObjectByPath(String path) {
+		List<CmsObject> cmsObjects = cmsObjectRepository.getRecursiveCmsObjectsByPath(path);
+		for(CmsObject cmsObject : cmsObjects) {
+			storageService.deleteAllObjectFiles(cmsObject.getId());
+			footerLinkObjectService.deleteFooterLinkObjectByCmsObjectId(cmsObject.getId());
+			cmsObjectRepository.delete(cmsObject);
+		}
 	}
 	
 	public List<CmsObject> searchCmsObjects(boolean isAdmin, String searchString){

@@ -5,7 +5,6 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -61,7 +60,6 @@ public interface CmsObjectRepository extends JpaRepository<CmsObject, Long> {
 
 	boolean existsByParentAndNameAndIdIsNot(CmsObject parentCmsObject, String name, Long id);
 
-	@Modifying
 	@Query(nativeQuery=true, value=
 			"WITH RECURSIVE cms_object_temp (id, creation_time, modification_time, name, name_path, view, only_menu, published, child_index, parent_id, json, search_string, level, path_array) AS (" + 
 			"    SELECT id, creation_time, modification_time, name, name_path, view, only_menu, published, child_index, parent_id, json, search_string, 0, ARRAY[name_path]" + 
@@ -72,9 +70,9 @@ public interface CmsObjectRepository extends JpaRepository<CmsObject, Long> {
 			"    FROM cms_object c" + 
 			"            INNER JOIN cms_object_temp t0 ON t0.id = c.parent_id" + 
 			") " +
-			"DELETE " + 
-			"FROM cms_object " + 
-			"WHERE id IN (SELECT id FROM cms_object_temp WHERE ARRAY_TO_STRING(path_array, '/') LIKE :path%)"
+			"SELECT id, creation_time, modification_time, name, name_path, view, only_menu, published, child_index, parent_id, json, search_string " +
+			"FROM cms_object_temp " + 
+			"WHERE ARRAY_TO_STRING(path_array, '/') LIKE :path%)"
 	)
-	void deleteByPath(String path);
+	<T> List<T> getRecursiveCmsObjectsByPath(String path);
 }

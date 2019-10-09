@@ -133,7 +133,7 @@ public class CmsObjectController {
 	@DeleteMapping("api/cmsobject/path")
 	@PreAuthorize("hasRole('CMS_ADMIN')")
     public ResponseEntity<?> cmsObjectDeleteByPath(@RequestParam String path) {
-		cmsObjectService.deleteCmsObjectByPath("root" + path);
+		cmsObjectService.deleteRecursiveCmsObjectByPath("root" + path);
         return ResponseEntity.ok("CmsObject deleted.");
     }
 	
