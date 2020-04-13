@@ -4,6 +4,8 @@ server:
     enabled: true
     mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json,image/jpeg,image/jpg,image/png,image/bmp,image/gif
     min-response-size: 256
+  http2:
+    enabled: true
 
 spring: 
   application:
